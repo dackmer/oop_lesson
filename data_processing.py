@@ -76,6 +76,7 @@ class Table:
         return self.table_name + ':' + str(self.table)
 
 
+
 table1 = Table('cities', cities)
 table2 = Table('countries', countries)
 my_DB = DB()
@@ -100,3 +101,33 @@ my_table2 = my_DB.search('countries')
 my_table3 = my_table1.join(my_table2, 'country')
 my_table3_filtered = my_table3.filter(lambda x: x['EU'] == 'no').filter(lambda x: float(x['temperature']) < 5.0)
 print(my_table3_filtered.table)
+
+
+filtered_cities_eu_no_coastline = my_table3.filter(lambda x: x['EU'] == 'yes' and x['coastline'] == 'no')
+
+temps = [float(city['temperature']) for city in filtered_cities_eu_no_coastline.table]
+if temps:
+    min_temp = min(temps)
+    max_temp = max(temps)
+    print(f"Minimum temperature in EU cities without coastlines: {min_temp:.2f}")
+    print(f"Maximum temperature in EU cities without coastlines: {max_temp:.2f}")
+else:
+    print("No cities found in the EU without coastlines.")
+
+print()
+
+for country in countries:
+    country_name = country['country']
+    cities_in_country = my_table1.filter(lambda x: x['country'] == country_name)
+
+    latitudes = [float(city['latitude']) for city in cities_in_country.table]
+    if latitudes:
+        min_lat = min(latitudes)
+        max_lat = max(latitudes)
+        print(f"Country: {country_name}")
+        print(f"Minimum latitude: {min_lat:.2f}")
+        print(f"Maximum latitude: {max_lat:.2f}")
+        print()
+
+print("\nCities in the EU without coastlines:")
+print(filtered_cities_eu_no_coastline.table)
