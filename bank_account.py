@@ -21,6 +21,9 @@ class AccountDB:
                 return account
         return None
 
+    def delete_account(self):
+        print("Deleting account:", self.account_number)
+
     def __str__(self):
         s = ''
         for account in self.account_database:
